@@ -36,8 +36,27 @@ def tweet_image(url, message):
     else:
         print("Unable to download image")
         
-message,url = espnTeams.getTeamScore('OSU')        
+eventid,url = espnTeams.getTeamInfo('USC')       
+
+#DriveTeam, DriveDesc, isScore, ScoreWhat =  espnTeams.getTeamScore(eventid)
+
+#for line in f:
+ #   api.update_status(line)
+ #   time.sleep(900)#Tweet every 15 minutes
+ 
+ #loop through until ScoreType = 'End of Game'
+ 
+ScoreWhat = '' 
+ 
+while ScoreWhat != 'End of Game':
+    
+    url, DriveTeam, DriveDesc, isScore, ScoreWhat, Scoreis =  espnTeams.getTeamScore(eventid)
+
+    if isScore:
+        tweet_image(url,ScoreWhat + '!!!! ' +  DriveTeam + ' ~ ' + DriveDesc + '   ' + Scoreis)
+    
+    if ScoreWhat == 'End of Game':
+        winTeam, winTeamLogo = espnTeams.getWinner(eventid)
+        tweet_image(winTeamLogo,winTeam + ' WIN ~    ' + Scoreis)
         
-#url = espnTeams.logo # "https://a.espncdn.com/i/teamlogos/ncaa/500/158.png"
-#message = espnTeams.nextEvent # "Nice one"
-tweet_image(url, message)
+    time.sleep(60)#Tweet every 15 minutes
