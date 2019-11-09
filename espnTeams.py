@@ -11,7 +11,7 @@ import json, requests
 
 def getWinner(eventid):
     
-    url = 'http://site.api.espn.com/apis/site/v2/sports/football/college-football/summary?event=401114171'
+    url = 'http://site.api.espn.com/apis/site/v2/sports/football/college-football/summary?event=' + eventid
    
     response = requests.get(url)
     response.raise_for_status()
@@ -50,9 +50,12 @@ def getTeamInfo(myTeam):
     
     nextEventName = t['nextEvent'][0]['name']
     
-    nextEvent= t['nextEvent'][0]['id'] 
+    nextEvent= t['nextEvent'][0]['id']
     
-    return nextEvent,logo
+    nextEventComplete = t['nextEvent'][0]['competitions'][0]['status']['type']['completed']
+    nextEventDate = t['nextEvent'][0]['date']
+     
+    return nextEvent,nextEventDate,nextEventComplete,logo
 
 def getTeamScore(eventid):
     

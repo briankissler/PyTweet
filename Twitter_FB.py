@@ -4,7 +4,9 @@ Created on Sat Nov  2 09:15:10 2019
 
 @author: bk
 """
-import tweepy, time, sys, cred_twitter, requests, os, espnTeams
+import tweepy, time, sys, cred_twitter, requests, os, espnTeams, testGetTeam, myDateTime
+
+from datetime import datetime
 
 #argfile = str(sys.argv[1])
 
@@ -36,7 +38,17 @@ def tweet_image(url, message):
     else:
         print("Unable to download image")
         
-eventid,url = espnTeams.getTeamInfo('USC')       
+        
+asu = testGetTeam.myTeam('ORST')
+
+print( asu.nextEventName )
+print( asu.nextEvent )
+print( asu.nextEventComplete )
+print( asu.nextEventDate )
+
+
+        
+#nextEvent,nextEventDate,nextEventComplete,logo = espnTeams.getTeamInfo('ASU')       
 
 #DriveTeam, DriveDesc, isScore, ScoreWhat =  espnTeams.getTeamScore(eventid)
 
@@ -47,16 +59,25 @@ eventid,url = espnTeams.getTeamInfo('USC')
  #loop through until ScoreType = 'End of Game'
  
 ScoreWhat = '' 
- 
-while ScoreWhat != 'End of Game':
-    
-    url, DriveTeam, DriveDesc, isScore, ScoreWhat, Scoreis =  espnTeams.getTeamScore(eventid)
 
-    if isScore:
-        tweet_image(url,ScoreWhat + '!!!! ' +  DriveTeam + ' ~ ' + DriveDesc + '   ' + Scoreis)
+#nextEventDate =aslocaltimestr(datetime.strptime(asu.nextEventDate, '%Y-%m-%dT%H:%MZ'))
+
+nextEventDate = datetime.strptime(asu.nextEventDate, '%Y-%m-%dT%H:%MZ')
+
+print(myDateTime.aslocaltimestr(nextEventDate))
+print(myDateTime.aslocaltimestr(datetime.utcnow()))
+
+gScoreis = 0
+while not asu.nextEventComplete and  myDateTime.aslocaltimestr(nextEventDate) <  myDateTime.aslocaltimestr(datetime.utcnow()):
     
-    if ScoreWhat == 'End of Game':
-        winTeam, winTeamLogo = espnTeams.getWinner(eventid)
-        tweet_image(winTeamLogo,winTeam + ' WIN ~    ' + Scoreis)
+    url, DriveTeam, DriveDesc, isScore, ScoreWhat, Scoreis =  espnTeams.getTeamScore(asu.nextEvent)
+    
+    if isScore and gScoreis != Scoreis:
+        tweet_image(url,ScoreWhat + '!!!! ' +  DriveTeam + ' ~ ' + DriveDesc + '   ' + Scoreis)
         
-    time.sleep(60)#Tweet every 15 minutes
+    if ScoreWhat == 'End of Game':
+        winTeam, winTeamLogo = espnTeams.getWinner(asu.nextEvent)
+        tweet_image(winTeamLogo,winTeam + ' WIN ~    ' + Scoreis)
+        break
+    gScoreis = Scoreis    
+    time.sleep(60)#Tweet every 6 minutes
