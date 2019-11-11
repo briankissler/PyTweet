@@ -38,8 +38,10 @@ def tweet_image(url, message):
     else:
         print("Unable to download image")
         
+# nfl or college-football        
         
-asu = testGetTeam.myTeam('ORST')
+sport = 'nfl'        
+asu = testGetTeam.myTeam(sport,'DAL')
 
 print( asu.nextEventName )
 print( asu.nextEvent )
@@ -61,23 +63,38 @@ print( asu.nextEventDate )
 ScoreWhat = '' 
 
 #nextEventDate =aslocaltimestr(datetime.strptime(asu.nextEventDate, '%Y-%m-%dT%H:%MZ'))
+ 
+#print(myDateTime.strptime(myDateTime.aslocaltimestr(datetime.strptime(nextEventDate, '%Y-%m-%dT%H:%MZ')),'%Y-%m-%d %H:%M:%S'))
+#print(myDateTime.strptime(myDateTime.aslocaltimestr(datetime.utcnow()),'%Y-%m-%d %H:%M:%S'))
 
-nextEventDate = datetime.strptime(asu.nextEventDate, '%Y-%m-%dT%H:%MZ')
+gameTime = datetime.strptime(myDateTime.aslocaltimestr(datetime.strptime(asu.nextEventDate, '%Y-%m-%dT%H:%MZ')),'%Y-%m-%d %H:%M:%S')
+rightNow = datetime.strptime(myDateTime.aslocaltimestr(datetime.utcnow()),'%Y-%m-%d %H:%M:%S')
 
-print(myDateTime.aslocaltimestr(nextEventDate))
-print(myDateTime.aslocaltimestr(datetime.utcnow()))
+print(gameTime)
+print(rightNow)
+
+#if datetime.strptime(myDateTime.aslocaltimestr(datetime.strptime(nextEventDate, '%Y-%m-%dT%H:%MZ')),'%Y-%m-%d %H:%M:%S') <=  datetime.strptime(myDateTime.aslocaltimestr(datetime.utcnow()),'%Y-%m-%d %H:%M:%S'):
+#    print('Game HAS started')
+#else: print('Game has NOT started')
 
 gScoreis = 0
-while not asu.nextEventComplete and  myDateTime.aslocaltimestr(nextEventDate) <  myDateTime.aslocaltimestr(datetime.utcnow()):
-    
-    url, DriveTeam, DriveDesc, isScore, ScoreWhat, Scoreis =  espnTeams.getTeamScore(asu.nextEvent)
-    
-    if isScore and gScoreis != Scoreis:
-        tweet_image(url,ScoreWhat + '!!!! ' +  DriveTeam + ' ~ ' + DriveDesc + '   ' + Scoreis)
+
+while not asu.nextEventComplete:
+
+    while gameTime <=  rightNow:
+        print('Game HAS started')
         
-    if ScoreWhat == 'End of Game':
-        winTeam, winTeamLogo = espnTeams.getWinner(asu.nextEvent)
-        tweet_image(winTeamLogo,winTeam + ' WIN ~    ' + Scoreis)
-        break
-    gScoreis = Scoreis    
-    time.sleep(60)#Tweet every 6 minutes
+        url, DriveTeam, DriveDesc, isScore, ScoreWhat, Scoreis =  espnTeams.getTeamScore(sport,asu.nextEvent)
+        
+        if isScore and gScoreis != Scoreis:
+            tweet_image(url,ScoreWhat + '!!!! ' +  DriveTeam + ' ~ ' + DriveDesc + '   ' + Scoreis)
+            
+        if ScoreWhat == 'End of Game':
+            winTeam, winTeamLogo = espnTeams.getWinner(sport,asu.nextEvent)
+            tweet_image(winTeamLogo,winTeam + ' WIN ~    ' + Scoreis)
+            break
+        gScoreis = Scoreis    
+        time.sleep(60)#Tweet every 1 minutes
+    
+    print('Game has NOT started')     
+    time.sleep(300)#Tweet every 5 minutes        

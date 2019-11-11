@@ -9,9 +9,9 @@ import json, requests
 
 #url ='http://site.api.espn.com/apis/site/v2/sports/football/college-football/teams'
 
-def getWinner(eventid):
+def getWinner(sp,eventid):
     
-    url = 'http://site.api.espn.com/apis/site/v2/sports/football/college-football/summary?event=' + eventid
+    url = 'http://site.api.espn.com/apis/site/v2/sports/football/'+sp+'/summary?event=' + eventid
    
     response = requests.get(url)
     response.raise_for_status()
@@ -28,9 +28,9 @@ def getWinner(eventid):
     
     return winnerIs, winnerLogo
     
-def getTeamInfo(myTeam):
+def getTeamInfo(sp,myTeam):
     
-    url ='http://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/' + myTeam 
+    url ='http://site.api.espn.com/apis/site/v2/sports/football/'+sp+'/teams/' + myTeam 
     response = requests.get(url)
     response.raise_for_status()
 
@@ -57,9 +57,9 @@ def getTeamInfo(myTeam):
      
     return nextEvent,nextEventDate,nextEventComplete,logo
 
-def getTeamScore(eventid):
+def getTeamScore(sp,eventid):
     
-    url = 'http://site.api.espn.com/apis/site/v2/sports/football/college-football/summary?event=' + eventid
+    url = 'http://site.api.espn.com/apis/site/v2/sports/football/'+sp+'/summary?event=' + eventid
    
     response = requests.get(url)
     response.raise_for_status()
