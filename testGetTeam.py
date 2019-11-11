@@ -7,9 +7,9 @@ Created on Mon Nov  4 20:46:34 2019
 import json, requests
 
 class myTeam:
-  def __init__(self,team ):
+  def __init__(self,sport,team ):
       self.team = team
-      self.url ='http://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/' + self.team 
+      self.url ='http://site.api.espn.com/apis/site/v2/sports/football/'+sport+'/teams/' + self.team 
       response = requests.get(self.url)
       response.raise_for_status()
       teamData = json.loads(response.text)
