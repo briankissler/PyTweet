@@ -86,8 +86,10 @@ def getTeamScore(sp,eventid):
         url = scoreData['drives']['previous'][-1]['team']['logos'][0]['href']
         teamDriveDesc = scoreData['drives']['previous'][-1]['description'] 
         Score =  scoreData['drives']['previous'][-1]['isScore']
-        if 'displayResult' in scoreData['drives']['previous'][-1]:
-            ScoreType =  scoreData['drives']['previous'][-1]['displayResult'] 
+        if 'displayResult' in scoreData['drives']['previous'][-1]:            
+            #ScoreType =  scoreData['drives']['previous'][-1]['displayResult'] 
+            ScoreType = scoreData['header']['competitions'][0]['status']['type']['completed']
+            
             theScoreIs = str( scoreData['drives']['previous'][-1]['plays'][-1]['awayScore'] )
             theScoreIs = theScoreIs + ' - ' + str ( scoreData['drives']['previous'][-1]['plays'][-1]['homeScore'] ) 
         else:

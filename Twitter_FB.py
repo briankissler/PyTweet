@@ -82,14 +82,15 @@ gScoreis = 0
 while not asu.nextEventComplete:
 
     while gameTime <=  rightNow:
-        print('Game HAS started')
+        print('Game HAS started - Score is ' + str(gScoreis))
         
         url, DriveTeam, DriveDesc, isScore, ScoreWhat, Scoreis =  espnTeams.getTeamScore(sport,asu.nextEvent)
         
         if isScore and gScoreis != Scoreis:
             tweet_image(url,ScoreWhat + '!!!! ' +  DriveTeam + ' ~ ' + DriveDesc + '   ' + Scoreis)
             
-        if ScoreWhat == 'End of Game':
+        #if ScoreWhat == 'End of Game':
+        if ScoreWhat:
             winTeam, winTeamLogo = espnTeams.getWinner(sport,asu.nextEvent)
             tweet_image(winTeamLogo,winTeam + ' WIN ~    ' + Scoreis)
             break
