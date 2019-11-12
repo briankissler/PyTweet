@@ -88,7 +88,10 @@ def getTeamScore(sp,eventid):
         Score =  scoreData['drives']['previous'][-1]['isScore']
         if 'displayResult' in scoreData['drives']['previous'][-1]:            
             #ScoreType =  scoreData['drives']['previous'][-1]['displayResult'] 
-            ScoreType = scoreData['header']['competitions'][0]['status']['type']['completed']
+            #ScoreType =  Changed this because NFL and College are differe displayResult
+            if scoreData['header']['competitions'][0]['status']['type']['completed']:
+                ScoreType = 'End of Game' 
+            
             
             theScoreIs = str( scoreData['drives']['previous'][-1]['plays'][-1]['awayScore'] )
             theScoreIs = theScoreIs + ' - ' + str ( scoreData['drives']['previous'][-1]['plays'][-1]['homeScore'] ) 
