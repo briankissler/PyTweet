@@ -20,10 +20,10 @@ def getWinner(sp,eventid):
 
     for competitors in scoreData['header']['competitions'][0]['competitors']:
         if competitors['winner']:
-            print (competitors['team']['name'] )
+            #print (competitors['team']['name'] )
             winnerIs = competitors['team']['name']  
             for url in competitors['team']['logos']:
-                print(url['href'])        
+                #print(url['href'])        
                 winnerLogo = url['href']  
     
     return winnerIs, winnerLogo
@@ -57,6 +57,19 @@ def getTeamInfo(sp,myTeam):
      
     return nextEvent,nextEventDate,nextEventComplete,logo
 
+def getTeamName(sp,myTeamID):
+    
+    url ='http://site.api.espn.com/apis/site/v2/sports/football/'+sp+'/teams/' + myTeamID
+    response = requests.get(url)
+    response.raise_for_status()
+    teamData = json.loads(response.text)
+
+    t = teamData['team']
+    logo = t['logos'][0]['href']
+    name = t['name']
+     
+    return logo,name
+
 def getTeamScore(sp,eventid):
     
     url = 'http://site.api.espn.com/apis/site/v2/sports/football/'+sp+'/summary?event=' + eventid
@@ -68,11 +81,15 @@ def getTeamScore(sp,eventid):
     
     ScoreType = 'TEST' 
     
+    
     #if no current use previous
     if 'current' in scoreData['drives']:    
-        teamDrive = scoreData['drives']['current']['team']['name']
-        url = scoreData['drives']['current']['team']['logos'][0]['href']
-        teamDriveDesc = scoreData['drives']['current']['description'] 
+        url, teamDrive = getTeamName(sp,scoreData['drives']['current']['plays'][-1]['end']['team']['id'])
+        #teamDrive = scoreData['drives']['current']['team']['name']
+        #url = scoreData['drives']['current']['team']['logos'][0]['href']
+        
+        #teamDriveDesc = scoreData['drives']['current']['description'] 
+        teamDriveDesc = scoreData['drives']['current']['plays'][-1]['text']
         Score =  scoreData['drives']['current']['isScore']    
         if 'displayResult' in scoreData['drives']['current']:
             ScoreType =  scoreData['drives']['current']['displayResult'] 
@@ -82,8 +99,9 @@ def getTeamScore(sp,eventid):
             ScoreType = 'TEST'
             theScoreIs = ' '
     else:
-        teamDrive = scoreData['drives']['previous'][-1]['team']['name']
-        url = scoreData['drives']['previous'][-1]['team']['logos'][0]['href']
+        url, teamDrive = getTeamName(sp,scoreData['drives']['previous'][-1]['plays'][-1]['end']['team']['id'])
+        #teamDrive = scoreData['drives']['previous'][-1]['team']['name']
+        #url = scoreData['drives']['previous'][-1]['team']['logos'][0]['href']
         teamDriveDesc = scoreData['drives']['previous'][-1]['description'] 
         Score =  scoreData['drives']['previous'][-1]['isScore']
         if 'displayResult' in scoreData['drives']['previous'][-1]:            
