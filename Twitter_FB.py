@@ -40,8 +40,9 @@ def tweet_image(url, message):
         
 # nfl or college-football        
         
+#sport = 'college-football'        
 sport = 'nfl'        
-asu = testGetTeam.myTeam(sport,'DAL')
+asu = testGetTeam.myTeam(sport,'LAC')
 
 print( asu.nextEventName )
 print( asu.nextEvent )
@@ -80,22 +81,29 @@ print(rightNow)
 gScoreis = 0
 
 while not asu.nextEventComplete:
-
+    
+    
+    #print('start' + asu.nextEventComplete)
     while gameTime <=  rightNow:
         print('Game HAS started - Score is ' + str(gScoreis))
-        
         url, DriveTeam, DriveDesc, isScore, ScoreWhat, Scoreis =  espnTeams.getTeamScore(sport,asu.nextEvent)
         
         if isScore and gScoreis != Scoreis:
             tweet_image(url,ScoreWhat + '!!!! ' +  DriveTeam + ' ~ ' + DriveDesc + '   ' + Scoreis)
             
-        #if ScoreWhat == 'End of Game':
-        if ScoreWhat:
+        #if asu.nextEventComplete: #
+        if ScoreWhat == 'End of Game':
+        #if ScoreWhat:
             winTeam, winTeamLogo = espnTeams.getWinner(sport,asu.nextEvent)
             tweet_image(winTeamLogo,winTeam + ' WIN ~    ' + Scoreis)
-            break
+            raise SystemExit
+        
         gScoreis = Scoreis    
         time.sleep(60)#Tweet every 1 minutes
     
-    print('Game has NOT started')     
-    time.sleep(300)#Tweet every 5 minutes        
+    print('Game has NOT started')   
+    time.sleep(300)#Tweet every 5 minutes
+    asu.IsComplete()        
+    print('end - ' + str(asu.nextEventComplete))
+    
+    

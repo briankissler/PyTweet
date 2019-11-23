@@ -9,6 +9,7 @@ import json, requests
 class myTeam:
   def __init__(self,sport,team ):
       self.team = team
+      self.sport= sport
       self.url ='http://site.api.espn.com/apis/site/v2/sports/football/'+sport+'/teams/' + self.team 
       response = requests.get(self.url)
       response.raise_for_status()
@@ -19,6 +20,15 @@ class myTeam:
       self.nextEvent= t['nextEvent'][0]['id']
       self.nextEventComplete = t['nextEvent'][0]['competitions'][0]['status']['type']['completed']
       self.nextEventDate = t['nextEvent'][0]['date']
+      
+  def IsComplete(self):
+      self.url ='http://site.api.espn.com/apis/site/v2/sports/football/'+self.sport+'/teams/' + self.team 
+      response = requests.get(self.url)
+      response.raise_for_status()
+      teamData = json.loads(response.text)
+      t = teamData['team']
+      self.nextEventComplete = t['nextEvent'][0]['competitions'][0]['status']['type']['completed']
+      
       
       
 #asu = myTeam('ASU') 
