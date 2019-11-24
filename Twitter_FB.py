@@ -84,7 +84,7 @@ while not asu.nextEventComplete:
     
     
     #print('start' + asu.nextEventComplete)
-    while gameTime <=  rightNow:
+    while gameTime <=  datetime.strptime(myDateTime.aslocaltimestr(datetime.utcnow()),'%Y-%m-%d %H:%M:%S'):
         print('Game HAS started - Score is ' + str(gScoreis))
         url, DriveTeam, DriveDesc, isScore, ScoreWhat, Scoreis =  espnTeams.getTeamScore(sport,asu.nextEvent)
         
