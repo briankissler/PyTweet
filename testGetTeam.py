@@ -20,6 +20,7 @@ class myTeam:
       self.nextEvent= t['nextEvent'][0]['id']
       self.nextEventComplete = t['nextEvent'][0]['competitions'][0]['status']['type']['completed']
       self.nextEventDate = t['nextEvent'][0]['date']
+      self.GameStatus = ''
       
   def IsComplete(self):
       self.url ='http://site.api.espn.com/apis/site/v2/sports/football/'+self.sport+'/teams/' + self.team 
@@ -29,15 +30,26 @@ class myTeam:
       t = teamData['team']
       self.nextEventComplete = t['nextEvent'][0]['competitions'][0]['status']['type']['completed']
       
+  def GetGameStatus(self):
+      self.url ='http://site.api.espn.com/apis/site/v2/sports/football/'+self.sport+'/teams/' + self.team 
+      response = requests.get(self.url)
+      response.raise_for_status()
+      teamData = json.loads(response.text)
+      t = teamData['team']
+      self.GameStatus = t['nextEvent'][0]['competitions'][0]['status']['type']['name']
       
       
-#asu = myTeam('ASU') 
+      
+#asu = myTeam('college-football','ASU') 
 #nebraska = myTeam('nebraska') 
-
+#
 #print( asu.nextEventName )
 #print( asu.nextEvent )
 #print( asu.nextEventComplete )
 #print( asu.nextEventDate )
+#asu.GetGameStatus()
+#print(asu.GameStatus)
+
 
 
 #print( nebraska.nextEventName )
